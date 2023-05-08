@@ -1,0 +1,12 @@
+- name: Execute MySQL command
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Execute show databases command
+      shell: mysql -u root -p123 -e "show databases;"
+      register: mysql_output
+
+    - name: Print output
+      debug:
+        var: mysql_output.stdout_lines
+

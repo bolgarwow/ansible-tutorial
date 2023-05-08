@@ -1,0 +1,22 @@
+---
+- name: Execute MySQL command
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if database exists
+      shell: mysql -u root -p123 -e "SHOW DATABASES LIKE 'machines';"
+      register: db_check_result
+      changed_when: false
+
+    - name: Create database if it doesn't exist
+      shell: mysql -u root -p123 -e "CREATE DATABASE machines;"
+      when: "'machines' not in db_check_result.stdout"
+
+    - name: Execute show databases command
+      shell: mysql -u root -p123 -e "SHOW DATABASES;"
+      register: mysql_output
+
+    - name: Print output
+      debug:
+        var: mysql_output.stdout_lines
+
